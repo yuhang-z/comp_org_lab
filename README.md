@@ -1,1 +1,6 @@
 # comp_org_lab
+Comp_org_lab stands for lab projects that completed in McGill course ECSE324 Computer Organiazation </br>
+</br>
+All projects, written in Assembly, is designed and performed to confront various comprehensive programming problems.</br>
+</br>
+All projects are brainstormed and written by Yuhang Zhang and Pengnan Fan.
