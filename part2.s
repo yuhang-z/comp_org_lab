@@ -2,33 +2,36 @@
 			.global _start 
 
 _start:
-			LDR R4, =SMALLESTN	//R4 points to the updating samllest value  
-			LDR R5, =LARGESTN	//R5 points to the updating largest value
-			LDR R2, [R4, #8] 	//R2 holds the number of elements in the list 
-			ADD R3, R4, #8		//R3 points to the first number -->moving pointer 
+			LDR R6, =RESULT		//R6 points to the RESULT location 
+			LDR R5, [R6, #4]	//R5 stores the content of the largest number 
+			LDR R4, [R6, #8]	//R4 stores the content of the smallest number 
+			LDR R2, [R6, #12] 	//R2 holds the number of elements in the list 
+			ADD R3, R6, #16		//R3 points to the first number -->moving pointer 
 			LDR R0, [R3]  		//R0 holds the first number in the list--> content 
-			SUBS R6, R5, R4		//R6 stores the computed range 
 
-LOOP: 		SUBS R2, R2, #1 	//decrement the loop counter
-			BEQ DONE 			//end loop if the counter is reached 0 
-			ADD R3, R3, #4		//R3 points to the next number in the list
-			LDR R0, [R3]		//R1 holds the next number in the list 
-			CMP R5, R0 			//check if it is greater than the max 
-			BGE X 				//BGE stands for --if greater or equal, then --
-            CMP R0, R4			//check if it is smaller that the min
-			BGE LOOP 			//if no, branch back to the loop
+LOOP: 		CMP R0, R5			//LARGGEST 
+			BGE X
+			CMP R0, R4
+			BGE Y
 			MOV R4, R0
-			B LOOP 				// branch back to the loop 
-X:			MOV R5, R0 			//set instruction
+			B Y
+X:			MOV R5, R0 
+Y:			SUBS R2, R2, #1 	//decrement the loop counter
+			BEQ DONE 			//end loop if the counter is reached 0
+			ADD R3, R3, #4		//R3 points to the next number in the list
+			LDR R0, [R3]		
+			//B LOOP 				// branch back to the loop 
+//X:			MOV R5, R0 			//set instruction
+			B LOOP 
 
-DONE: 		SUBS R6, R5, R4		//R6 stores the computed range 
-			//STR R4, [R4]		//store the result to the memory location 
-			STR R6, [R6]		//store the result to the memory location 
+DONE: 		SUBS R5, R5, R4		//R5 stores the computed range 
+			STR R5, [R6]		//store the result to the memory location 
 
 END: 		B END 				//infinite loop!
 
-LARGESTN:	.word	0			//memory assigned for the largest number searched 
-SMALLESTN:	.word 	0			//memory assigned for the smallest number searched
+RESULT:     .word   0           // RESULT 
+LNUM:		.word	0			//memory assigned for the largest number searched 
+SNUM:		.word 	100			//memory assigned for the smallest number searched
 N: 			.word 	7 			//number of entries in the list 
 NUMBERS:	.word	89, 71, 84, 91	//the list data 
 			.word 	87, 77, 91
