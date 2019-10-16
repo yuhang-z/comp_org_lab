@@ -17,21 +17,21 @@ LOOP: 		CMP R0, R5			//LARGGEST
 			B Y
 X:			MOV R5, R0 
 Y:			SUBS R2, R2, #1 	//decrement the loop counter
-			BEQ DONE 			//end loop if the counter is reached 0
+			BEQ DONE 		//end loop if the counter is reached 0
 			ADD R3, R3, #4		//R3 points to the next number in the list
 			LDR R0, [R3]		
-			//B LOOP 				// branch back to the loop 
-//X:			MOV R5, R0 			//set instruction
+			//B LOOP 		// branch back to the loop 
+//X:			MOV R5, R0 		//set instruction
 			B LOOP 
 
-DONE: 		SUBS R5, R5, R4		//R5 stores the computed range 
+DONE: 		SUBS R5, R5, R4		        //R5 stores the computed range 
 			STR R5, [R6]		//store the result to the memory location 
 
 END: 		B END 				//infinite loop!
 
-RESULT:     .word   0           // RESULT 
+RESULT:         .word   0                       // RESULT 
 LNUM:		.word	0			//memory assigned for the largest number searched 
 SNUM:		.word 	100			//memory assigned for the smallest number searched
-N: 			.word 	7 			//number of entries in the list 
-NUMBERS:	.word	89, 71, 84, 91	//the list data 
-			.word 	87, 77, 91
+N: 		.word 	7 			//number of entries in the list 
+NUMBERS:	.word	89, 71, 84, 91	        //the list data 
+		.word 	87, 77, 91
