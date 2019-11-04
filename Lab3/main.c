@@ -76,12 +76,12 @@ int	main()	{
 
 					count = 0;
 
-					HEX_write_ASM(HEX0, '0');
-					HEX_write_ASM(HEX1, '0');
-					HEX_write_ASM(HEX2, '0');
-					HEX_write_ASM(HEX3, '0');
-					HEX_write_ASM(HEX4, '0');
-					HEX_write_ASM(HEX5, '0');
+					HEX_write_ASM(HEX0, 0);
+					HEX_write_ASM(HEX1, 0);
+					HEX_write_ASM(HEX2, 0);
+					HEX_write_ASM(HEX3, 0);
+					HEX_write_ASM(HEX4, 0);
+					HEX_write_ASM(HEX5, 0);
 
 				}
 
