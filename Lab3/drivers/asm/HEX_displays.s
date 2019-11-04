@@ -6,15 +6,15 @@
         .global HEX_write_ASM
 
 HEX_clear_ASM:
-        PUSH {R1, LR}
-        MOV R1, #0x00
-        BL LOAD_MULTIPLE_VAR
+        PUSH {R1, LR}            	//push r1 into the stack 
+        MOV R1, #0x00		  	//to set R0 to 0 
+        BL LOAD_MULTIPLE_VAR      
         POP {R1, LR}
         BX LR
 
 HEX_flood_ASM:
         PUSH {R1, LR}
-        MOV R1, #0x7F
+        MOV R1, #0x7F			// set r1 with value 1111111
         BL LOAD_MULTIPLE_VAR
         POP {R1, LR}
         BX LR
