@@ -33,7 +33,7 @@ LOAD_MULTIPLE_VAR:
         PUSH {R2, R3, R4, R5, R6, R7}
         LDR R2, =HEX_A
         LDR R3, =HEX_B
-	MOV R7, #0x00            
+	MOV R7, #0xFF            
         MOV R4, #-1		//make the fist R4 after add equals to 0
 	MOV R5, #1
 
