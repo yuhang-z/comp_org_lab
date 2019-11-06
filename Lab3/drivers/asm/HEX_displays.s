@@ -34,6 +34,7 @@ LOAD_MULTIPLE_VAR:
         LDR R2, =HEX_A
         LDR R3, =HEX_B
 		MOV R7, #0x00            
+		MOV R7, #0xFF            
         MOV R4, #-1		//make the fist R4 after add equals to 0
 		MOV R5, #1
 
@@ -53,16 +54,16 @@ AST:    ADD R4, R4, #1
 
 	LDR R6, [R2]
 	CMP R4, #0  //HEX0
-        ANDEQ R6, R6, R7    //SET R6 to 0 
+        BICEQ R6, R6, R7    //SET R6 to 0 
         ORREQ R6, R6, R1
 	CMP R4, #1
-        ANDEQ R6, R6, R7, ROR #24  //post
+        BICEQ R6, R6, R7, ROR #24  //post
         ORREQ R6, R6, R1, ROR #24
 	CMP R4, #2
-        ANDEQ R6, R6, R7, ROR #16
+        BICEQ R6, R6, R7, ROR #16
         ORREQ R6, R6, R1, ROR #16
-    CMP R4, #3
-        ANDEQ R6, R6, R7, ROR #8
+        CMP R4, #3
+        BICEQ R6, R6, R7, ROR #8
         ORREQ R6, R6, R1, ROR #8
 	STR R6, [R2]
 		
@@ -70,10 +71,10 @@ AST:    ADD R4, R4, #1
 	//display 4-5 
 	LDR R6, [R3]
         CMP R4, #4
-        ANDEQ R6, R6, R7
+        BICEQ R6, R6, R7
         ORREQ R6, R6, R1
         CMP R4, #5
-        ANDEQ R6, R6, R7, ROR #24
+        BICEQ R6, R6, R7, ROR #24
         ORREQ R6, R6, R1, ROR #24
 	STR R6, [R3]
 
