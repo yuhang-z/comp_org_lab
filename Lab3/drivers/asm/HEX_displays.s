@@ -7,24 +7,24 @@
 
 //R1 goes to the 
 HEX_clear_ASM:
-	PUSH {R1, LR}          		 //Only need R1 
+		PUSH {R1, LR}          		 //Only need R1 
         MOV R1, #0x00		  	//Set R1 to 0000000
         BL LOAD_MULTIPLE_VAR      
         POP {R1, LR}
         BX LR
 
 HEX_flood_ASM:
-	PUSH {R1, LR}
+		PUSH {R1, LR}
         MOV R1, #0x7F			//Set R1 to 1111111
         BL LOAD_MULTIPLE_VAR
         POP {R1, LR}
         BX LR
 
 HEX_write_ASM:
-	PUSH {R1, R2, R3, LR}
-        LDR R2, =LOOKUP
-        LDRB R3, [R2, R1]   	//ldr but [address] address = r2 + r1
-        MOV R1, R3
+		PUSH {R1, R2, R3, LR}
+    	LDR R2, =LOOKUP
+    	LDRB R3, [R2, R1]   	//ldr but [address] address = r2 + r1
+    	MOV R1, R3
         BL LOAD_MULTIPLE_VAR
         POP {R1, R2, R3, LR}
         BX LR
@@ -33,9 +33,9 @@ LOAD_MULTIPLE_VAR:
         PUSH {R2, R3, R4, R5, R6, R7}
         LDR R2, =HEX_A
         LDR R3, =HEX_B
-	MOV R7, #0x00            
+		MOV R7, #0x00            
         MOV R4, #-1		//make the fist R4 after add equals to 0
-	MOV R5, #1
+		MOV R5, #1
 
 AST:    ADD R4, R4, #1
         CMP R4, #6
@@ -61,7 +61,7 @@ AST:    ADD R4, R4, #1
 	CMP R4, #2
         ANDEQ R6, R6, R7, ROR #16
         ORREQ R6, R6, R1, ROR #16
-        CMP R4, #3
+    CMP R4, #3
         ANDEQ R6, R6, R7, ROR #8
         ORREQ R6, R6, R1, ROR #8
 	STR R6, [R2]

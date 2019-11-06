@@ -7,13 +7,13 @@
 #include "./drivers/inc/ISRs.h"
 #include "./drivers/inc/int_setup.h"
 
-int	main()	{
-	
-	/*	Part 1	*/
-	/*
+int part1(){
+
 	while (1) {
 
         int readInteger = read_slider_switches_ASM();
+
+		write_LEDs_ASM(readInteger);		
 
         int toHEXDisplays = read_PB_data_ASM() & 0x0000000F;
 
@@ -28,15 +28,21 @@ int	main()	{
         } else {
 
             HEX_flood_ASM(HEX4 | HEX5);
+			//HEX_flood_ASM(HEX4);
+			//HEX_flood_ASM(HEX5);
 
             HEX_write_ASM(toHEXDisplays, readChar);
 
-        }
+    	}
+	}
+	return 0;
+}
 
-        write_LEDs_ASM(readInteger);
-
-    }
-	*/
+int	main()	{
+	
+	/*	Part 1	*/
+	return part1();
+	
 	
 	/*
 	unsigned int count = 0, start = 0;
@@ -113,6 +119,8 @@ int	main()	{
 
 	}
 	*/
+	
+	/*
 	int_setup(2, (int []){73, 199});
 
 	enable_PB_INT_ASM(PB0 | PB1 | PB2);
@@ -168,7 +176,8 @@ int	main()	{
 
 		}
 
-	}	
+	}
+	*/	
 
 	return	0;
 }
