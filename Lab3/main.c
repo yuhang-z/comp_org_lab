@@ -52,9 +52,9 @@ int part2(){
 
 			if (read_PB_edgecap_ASM()) {
 
-				if (PB_edgecap_is_pressed_ASM(PB0)) start = 1;
+				if (PB_edgecap_is_pressed_ASM(PB0)){start = 1;}
 
-				if (PB_edgecap_is_pressed_ASM(PB1)) start = 0;
+				if (PB_edgecap_is_pressed_ASM(PB1)){start = 0;}
 
 				if (PB_edgecap_is_pressed_ASM(PB2)) {
 
