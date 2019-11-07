@@ -83,18 +83,18 @@ SET_EN_BIT:
 
 HPS_TIM_clear_INT_ASM:
 	PUSH {LR}
-	MOV R1, #0
-	MOV R2, #1
+	MOV R1, #0				//offset to determine which timer to use
+	MOV R2, #1				//probe to determine which timer to use
 	B CLEAR_INT_LOOP
 
 CLEAR_INT_LOOP:
-	TST R0, R2, LSL R1
+	TST R0, R2, LSL R1	
 	BEQ CLEAR_INT_CONTINUE
 	BL CLEAR_INT
 
 CLEAR_INT_CONTINUE:
-	ADD R1, R1, #1
-	CMP R1, #4
+	ADD R1, R1, #1			//increment offset by 1
+	CMP R1, #4				//check if offset is greater than 4
 	BLT CLEAR_INT_LOOP
 	B CLEAR_INT_DONE
 
@@ -103,17 +103,17 @@ CLEAR_INT_DONE:
 	BX LR
 
 CLEAR_INT:
-	LDR R3, =HPS_TIM_BASE
+	LDR R3, =HPS_TIM_BASE		//store timer pointer to R3
 	LDR R3, [R3, R1, LSL #2]
-	LDR R3, [R3, #0xC]
+	LDR R3, [R3, #0xC]			//load End-of-Interrupt to R3
 	BX LR
 
 HPS_TIM_read_INT_ASM:
 	PUSH {LR}
 	PUSH {R4}
-	MOV R1, #0
-	MOV R2, #1
-	MOV R4, #0
+	MOV R1, #0					//offset to determine which timer to use
+	MOV R2, #1					//probe to determine which timer to use
+	MOV R4, #0					//place holder for S
 	B READ_INT_LOOP
 
 READ_INT_LOOP:
@@ -122,10 +122,10 @@ READ_INT_LOOP:
 	BL READ_INT
 
 READ_INT_CONTINUE:
-	ADD R1, R1, #1
-	CMP R1, #4
+	ADD R1, R1, #1				//increment offset by 1
+	CMP R1, #4					//check if offset is greater than 4
 	BEQ READ_INT_DONE
-	LSL R4, R4, #1
+	LSL R4, R4, #1				//left shift R4 by 1 with 0 as padding
 	B READ_INT_LOOP
 	
 READ_INT_DONE:
@@ -135,11 +135,11 @@ READ_INT_DONE:
 	BX LR
 
 READ_INT:
-	LDR R3, =HPS_TIM_BASE
+	LDR R3, =HPS_TIM_BASE		//store timer pointer to R3
 	LDR R3, [R3, R1, LSL #2]
-	LDR R3, [R3, #0x10]
-	AND R3, R3, #0x1
-	EOR R4, R4, R3
+	LDR R3, [R3, #0x10]			//load Interrupt status memory to R3
+	AND R3, R3, #0x1			//read S to R3
+	EOR R4, R4, R3				//change
 	BX LR
 	
 HPS_TIM_BASE:

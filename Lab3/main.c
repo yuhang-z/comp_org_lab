@@ -7,6 +7,13 @@
 #include "./drivers/inc/ISRs.h"
 #include "./drivers/inc/int_setup.h"
 
+int part0(){
+	while(1){
+		write_LEDs_ASM(read_slider_switches_ASM());
+	}
+	return 0;
+}
+
 int part1(){
 	while (1) {
         int readInteger = read_slider_switches_ASM();
@@ -86,7 +93,7 @@ int part2(){
 
 			HPS_TIM_clear_INT_ASM(TIM0);
 
-			count = (count + 1) % 600000;
+			count = (count + 1) % 999999;
 
 			HEX_write_ASM(HEX0, count % 10);
 			HEX_write_ASM(HEX1, (count / 10) % 10);
@@ -100,16 +107,7 @@ int part2(){
 	}
 }
 
-int	main()	{
-	
-	/*	Part 1	*/
-	//return part1();
-	
-	/* Part 2 */
-	return part2();
-	
-	
-	/*
+int part3(){
 	int_setup(2, (int []){73, 199});
 
 	enable_PB_INT_ASM(PB0 | PB1 | PB2);
@@ -154,7 +152,7 @@ int	main()	{
 
 			hps_tim0_int_flag = 0;
 
-			count = (count + 1) % 600000;
+			count = (count + 1) % 999999;
 
 			HEX_write_ASM(HEX0, count % 10);
 			HEX_write_ASM(HEX1, (count / 10) % 10);
@@ -166,7 +164,19 @@ int	main()	{
 		}
 
 	}
-	*/	
+}
 
-	return	0;
+int	main()	{
+	/* Slider switches and LEDs program */
+	//return part0();
+
+	/* Basic I/O program */
+	//return part1();
+	
+	/* Part 2 */
+	//return part2();
+	
+	
+	/* Part 3 */
+	return part3();
 }
