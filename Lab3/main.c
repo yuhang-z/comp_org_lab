@@ -32,82 +32,141 @@ int part1(){
 }
 
 int part2(){
-	unsigned int count = 0, start = 0;
+	int count0 = 0, count1 = 0, count2 = 0, count3 = 0;
 
-	HPS_TIM_config_t hps_tim10ms;
-	hps_tim10ms.tim = TIM0;
-	hps_tim10ms.timeout = 10000;
-	hps_tim10ms.LD_en = 1;
-	hps_tim10ms.INT_en = 1;
-	hps_tim10ms.enable = 1;
+	int start = 0;	
 
-    HPS_TIM_config_t hps_tim5ms;
-	hps_tim5ms.tim = TIM1;
-	hps_tim5ms.timeout = 5000;
-	hps_tim5ms.LD_en = 1;
-	hps_tim5ms.INT_en = 1;
-	hps_tim5ms.enable = 1;	
+	HPS_TIM_config_t hps_tiM0;
+	hps_tiM0.tim = TIM0;
+	hps_tiM0.timeout = 1000000;
+	hps_tiM0.LD_en = 1;
+	hps_tiM0.INT_en = 1;
+	hps_tiM0.enable = 1;
+	
+	HPS_TIM_config_t hps_tiM1;
+	hps_tiM1.tim = TIM1;
+	hps_tiM1.timeout = 1000000;
+	hps_tiM1.LD_en = 1;
+	hps_tiM1.INT_en = 1;
+	hps_tiM1.enable = 1;
 
-	HPS_TIM_config_ASM(&hps_tim10ms);
-	HPS_TIM_config_ASM(&hps_tim5ms);
+	HPS_TIM_config_t hps_tiM2;
+	hps_tiM2.tim = TIM2;
+	hps_tiM2.timeout = 1000000;
+	hps_tiM2.LD_en = 1;
+	hps_tiM2.INT_en = 1;
+	hps_tiM2.enable = 1;
 
-	while (1) {
+	HPS_TIM_config_t hps_tiM3;
+	hps_tiM3.tim = TIM3;
+	hps_tiM3.timeout = 1000000;
+	hps_tiM3.LD_en = 1;
+	hps_tiM3.INT_en = 1;
+	hps_tiM3.enable = 1;
 
-		if (HPS_TIM_read_INT_ASM(TIM1)) {
+	HPS_TIM_config_ASM(&hps_tiM0);
+	HPS_TIM_config_ASM(&hps_tiM1);
+	HPS_TIM_config_ASM(&hps_tiM2);
+	HPS_TIM_config_ASM(&hps_tiM3);
+	
+	HEX_write_ASM(HEX0, count0);
+	HEX_write_ASM(HEX1, count0);
+	HEX_write_ASM(HEX2, count0);
+	HEX_write_ASM(HEX3, count0);
 
-			HPS_TIM_clear_INT_ASM(TIM1);
+	while(1){
+		if (read_PB_edgecap_ASM()){
+			if (PB_edgecap_is_pressed_ASM(PB0)){start = 1;}
 
-			if (read_PB_edgecap_ASM()) {
-
-				if (PB_edgecap_is_pressed_ASM(PB0)){start = 1;}
-
-				if (PB_edgecap_is_pressed_ASM(PB1)){start = 0;}
-
-				if (PB_edgecap_is_pressed_ASM(PB2)) {
-
-					start = 0;
-
-					count = 0;
-
-					HEX_write_ASM(HEX0, 0);
-					HEX_write_ASM(HEX1, 0);
-					HEX_write_ASM(HEX2, 0);
-					HEX_write_ASM(HEX3, 0);
-					HEX_write_ASM(HEX4, 0);
-					HEX_write_ASM(HEX5, 0);
-
-				}
-
-				PB_clear_edgecp_ASM(HEX0);
-				PB_clear_edgecp_ASM(HEX1);
-				PB_clear_edgecp_ASM(HEX2);
-				PB_clear_edgecp_ASM(HEX3);
-				PB_clear_edgecp_ASM(HEX4);
-				PB_clear_edgecp_ASM(HEX5);
-
+			if (PB_edgecap_is_pressed_ASM(PB1)){start = 0;}
+			
+			if (PB_edgecap_is_pressed_ASM(PB2)) {
+				start = 0;
+				count0 = 0;
+				count1 = 0;
+				count2 = 0;
+				count3 = 0;
+				HEX_write_ASM(HEX0, count0);
+				HEX_write_ASM(HEX1, count0);
+				HEX_write_ASM(HEX2, count0);
 			}
-
+			
+			PB_clear_edgecp_ASM(PB0);
+			PB_clear_edgecp_ASM(PB1);
+			PB_clear_edgecp_ASM(PB2);
+			PB_clear_edgecp_ASM(PB3);
 		}
-
-		if (start && HPS_TIM_read_INT_ASM(TIM0)) {
-
-			HPS_TIM_clear_INT_ASM(TIM0);
-
-			count = (count + 1) % 999999;
-
-			HEX_write_ASM(HEX0, count % 10);
-			HEX_write_ASM(HEX1, (count / 10) % 10);
-			HEX_write_ASM(HEX2, (count / 100) % 10);
-			HEX_write_ASM(HEX3, ((count / 100) % 60) / 10);
-			HEX_write_ASM(HEX4, ((count / 100) / 60) % 10);
-			HEX_write_ASM(HEX5, ((count / 100) / 60) / 10 % 10);
-
+		if (start){
+			if (HPS_TIM_read_INT_ASM(TIM0)){
+				HPS_TIM_clear_INT_ASM(TIM0);
+				count0++;
+				count0%=16;
+				HEX_write_ASM(HEX0, count0);
+			}
+			if (HPS_TIM_read_INT_ASM(TIM1)){
+				HPS_TIM_clear_INT_ASM(TIM1);
+				count1++;
+				count1%=16;
+				HEX_write_ASM(HEX1, count1);
+			}
+			if (HPS_TIM_read_INT_ASM(TIM2)){
+				HPS_TIM_clear_INT_ASM(TIM2);
+				count2++;
+				count2%=16;
+				HEX_write_ASM(HEX2, count2);
+			}
+			if (HPS_TIM_read_INT_ASM(TIM3)){
+				HPS_TIM_clear_INT_ASM(TIM3);
+				count3++;
+				count3%=16;
+				HEX_write_ASM(HEX3, count3);
+			}
 		}
-
 	}
+	return 0;
 }
 
 int part3(){
+	int_setup(1, (int[]){199});
+	
+	int count = 0;
+	
+	int start = 0;
+
+	HPS_TIM_config_t hps_tim;
+	hps_tim.tim = TIM0;
+	hps_tim.timeout = 1000000;
+	hps_tim.LD_en = 1;
+	hps_tim.INT_en = 1;
+	hps_tim.enable = 1;
+
+	HPS_TIM_config_ASM(&hps_tim);
+	
+	HEX_write_ASM(HEX0, count);
+
+	while(1){
+		if (read_PB_edgecap_ASM()){
+			if (PB_edgecap_is_pressed_ASM(PB0)){start = 1;}
+
+			if (PB_edgecap_is_pressed_ASM(PB1)){start = 0;}
+			
+			if (PB_edgecap_is_pressed_ASM(PB2)) {
+				start = 0;
+				count = 0;
+				HEX_write_ASM(HEX0, count);
+			}
+			PB_clear_edgecp_ASM(PB0);
+			PB_clear_edgecp_ASM(PB1);
+			PB_clear_edgecp_ASM(PB2);
+		}
+		if (start && hps_tim0_int_flag){
+			hps_tim0_int_flag = 0;
+			count++;
+			count%=16;
+			HEX_write_ASM(HEX0, count);
+		}
+	}
+	/*
 	int_setup(2, (int []){73, 199});
 
 	enable_PB_INT_ASM(PB0 | PB1 | PB2);
@@ -164,6 +223,8 @@ int part3(){
 		}
 
 	}
+	*/
+	return 0;
 }
 
 int	main()	{
@@ -173,10 +234,9 @@ int	main()	{
 	/* Basic I/O program */
 	//return part1();
 	
-	/* Part 2 */
+	/* Polling based stopwatch */
 	//return part2();
 	
-	
-	/* Part 3 */
+	/* Interrupt based stopwatch */
 	return part3();
 }
