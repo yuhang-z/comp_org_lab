@@ -174,6 +174,66 @@ int part2(){
 }
 
 int part3(){
+	unsigned int ms = 0, start = 0, s = 0, min = 0;
+
+	HPS_TIM_config_t timer;
+	timer.tim = TIM0;
+	timer.timeout = 10000;
+	timer.LD_en = 1;
+	timer.INT_en = 1;
+	timer.enable = 1;
+	
+	HPS_TIM_config_ASM(&timer);
+
+	HPS_TIM_config_t timer1;
+	timer1.tim = TIM1;
+	timer1.timeout = 5000;
+	timer1.LD_en = 1;
+	timer1.INT_en = 1;
+	timer1.enable = 1;
+	
+	HPS_TIM_config_ASM(&timer1);
+	HEX_write_ASM(HEX0 | HEX1 | HEX2 | HEX3 | HEX4 | HEX5, 0);
+	while(1){
+		if(HPS_TIM_read_INT_ASM(TIM1)){
+			HPS_TIM_clear_INT_ASM(TIM1);
+			if (read_PB_edgecap_ASM()){
+				if (PB_edgecap_is_pressed_ASM(PB0)&&start==0){start = 1;}
+
+				if (PB_edgecap_is_pressed_ASM(PB1)&&start==1){start = 0;}
+			
+				if (PB_edgecap_is_pressed_ASM(PB2)) {
+					start = 0;
+					ms = 0;
+					s = 0;
+					min = 0;
+					HEX_write_ASM(HEX0 | HEX1 | HEX2 | HEX3 | HEX4 | HEX5, 0);
+				}
+			
+				PB_clear_edgecp_ASM(PB0);
+				PB_clear_edgecp_ASM(PB1);
+				PB_clear_edgecp_ASM(PB2);
+			}
+		}
+		if (start&&HPS_TIM_read_INT_ASM(TIM0)){
+			HPS_TIM_clear_INT_ASM(TIM0);
+			ms++;
+			s += (ms%100==0&&ms!=0) ? 1 : 0;
+			ms %= 100;
+			min += (s%60==0&&s!=0) ? 1 : 0;
+			s %= 60;
+			min %= 100;
+			HEX_write_ASM(HEX0, ms%10);
+			HEX_write_ASM(HEX1, (ms/10)%10);
+			HEX_write_ASM(HEX2, s%10);
+			HEX_write_ASM(HEX3, (s/10)%10);
+			HEX_write_ASM(HEX4, min%10);
+			HEX_write_ASM(HEX5, (min/10)%10);
+		}
+	}	
+
+	return 0;
+	/*
 	int_setup(1, (int[]){199});
 	unsigned int ms = 0, start = 0, s = 0, min = 0;
 
@@ -222,6 +282,7 @@ int part3(){
 	}	
 
 	return 0;
+	*/
 }
 
 int	main()	{
