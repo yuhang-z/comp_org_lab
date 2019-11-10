@@ -42,6 +42,13 @@ HPS_TIM0_ISR:
 	BX LR
 	
 HPS_TIM1_ISR:
+	PUSH {LR}
+    MOV R0, #0x2
+    BL HPS_TIM_clear_INT_ASM
+    LDR R0, =pushbtn_int_flag
+    MOV R1, #1
+    STR R1, [R0]
+    POP {LR}
 	BX LR
 	
 HPS_TIM2_ISR:
