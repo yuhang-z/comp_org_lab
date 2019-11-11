@@ -52,9 +52,9 @@ int	part1(){
 	VGA_clear_pixelbuff_ASM();
 	
 	while(1){
+		printf("1");
 		int btn = read_PB_data_ASM();
 		if	(btn & PB0){
-			printf("0");
 			if (read_slider_switches_ASM() != 0){
 				test_byte();
 			} else {
@@ -62,15 +62,12 @@ int	part1(){
 			}
 		}
 		if	(btn & PB1){
-			printf("1");
 			test_pixel();
 		}
 		if	(btn & PB2){
-			printf("2");
 			VGA_clear_charbuff_ASM();
 		}
 		if	(btn & PB3){
-			printf("3");
 			VGA_clear_pixelbuff_ASM();
 		}
 	}
