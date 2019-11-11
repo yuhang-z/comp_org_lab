@@ -7,11 +7,49 @@
 		.global	VGA_write_byte_ASM
 		.global	VGA_draw_point_ASM
 
-VGA_write_byte_ASM:
-		PUSH	{LR}
+VGA_draw_point_ASM:
+		//R0 for x
+		//R1 for y
+		//R2 for color in short
+		PUSH	{R3-R8, LR}
 		BL		CHR_BUFF_SNT_CHK
-		//todo
-		POP		{LR}
+		LSL		R1,		#9
+		ORR		R1,		R1,		R0
+		LSL		R1,		#1
+		LDR		R3,		PIX_BUFF
+		ORR		R3,		R3,		R1
+		STRH	R2,		[R3]
+		POP		{R3-R8,	LR}
+		BX		LR
+		
+
+VGA_write_byte_ASM:
+		//R0 for x
+		//R1 for y
+		//R2 for char
+		PUSH	{R3-R8, LR}
+		BL		CHR_BUFF_SNT_CHK
+		LSL		R1,		#7
+		ORR		R1,		R1,		R0
+		LDR		R3,		CHE_BUFF
+		ORR		R3,		R3,		R1
+		AND		R4,		R2,		#0xF
+		CMP		R4,		#0xF
+		BGT		DUMMY
+		CMP		R4,		#0
+		BLT		DUMMY
+		AND		R5,		R2,		#0xF0
+		LSR		R5,		R5,		#4
+		CMP		R5,		#0xF
+		BGT		DUMMY
+		CMP		R5,		#0
+		BLT		DUMMY
+		LDR		R6,		=DIC
+		LDRB	R7,		[R6,	R4]
+		LDRB	R8,		[R6,	R5]
+		STRB	R8,		[R3]
+		STRB	R7,		[R3,	#1]
+		POP		{R3-R8, LR}
 		BX		LR
 
 CHR_BUFF_SNT_CHK:
@@ -29,14 +67,14 @@ VGA_write_char_ASM:
 		//R0 for x
 		//R1 for y
 		//R2 for char
-		PUSH	{LR}
+		PUSH	{R3-R8, LR}
 		BL		CHR_BUFF_SNT_CHK
 		LSL		R1,		#7
 		ORR		R1,		R1,		R2
 		LDR		R3,		=CHR_BUFF
 		ORR		R3,		R3,		R1
 		STR		R2,		[R3]
-		POP		{LR}
+		POP		{R3-R8, LR}
 		BX		LR
 
 VGA_clear_charbuff_ASM:
@@ -109,8 +147,9 @@ PB_CL_INNER_LP:
 		B		PB_CL_INNER_LP
 
 DUMMY:
-		B	DUMMY
+		POP		{R3-R8, LR}
+		BX		LR
 
-DIC:	.byte	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46
+DIC:	.byte	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70
 		
 		.end
