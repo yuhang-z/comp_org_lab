@@ -16,7 +16,7 @@ VGA_draw_point_ASM:
 		LSL		R1,		#9
 		ORR		R1,		R1,		R0
 		LSL		R1,		#1
-		LDR		R3,		PIX_BUFF
+		LDR		R3,		=PIX_BUFF
 		ORR		R3,		R3,		R1
 		STRH	R2,		[R3]
 		POP		{R3-R8,	LR}
@@ -31,7 +31,7 @@ VGA_write_byte_ASM:
 		BL		CHR_BUFF_SNT_CHK
 		LSL		R1,		#7
 		ORR		R1,		R1,		R0
-		LDR		R3,		CHE_BUFF
+		LDR		R3,		=CHE_BUFF
 		ORR		R3,		R3,		R1
 		AND		R4,		R2,		#0xF
 		CMP		R4,		#0xF
