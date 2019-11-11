@@ -1,7 +1,7 @@
 #include	<stdio.h>
 #include	"./drivers/inc/VGA.h"
 #include	"./drivers/inc/pushbuttons.h"
-#include	"./drivers/inc/slider_switcheres.h"
+#include	"./drivers/inc/slider_switches.h"
 
 int	part2(){
 	int	x = 0;
@@ -10,14 +10,14 @@ int	part2(){
 	VGA_clear_charbuff_ASM();
 	VGA_clear_pixelbuff_ASM();
 	while(1){
-		if	(read_PS2_data_ASM(&read){
+		if	(read_PS2_data_ASM(&read)){
 			VGA_write_byte_ASM(x, y, read);
 			if (x == 78){
-				y+=1
-				y%=60
+				y+=1;
+				y%=60;
 			}
-			x+=3
-			x%=81
+			x+=3;
+			x%=81;
 		}
 	}
 	return	0;
@@ -54,6 +54,7 @@ int	part1(){
 	while(1){
 		int btn = read_PB_data_ASM();
 		if	(btn & PB0){
+			printf("0");
 			if (read_slider_switches_ASM() != 0){
 				test_byte();
 			} else {
@@ -61,12 +62,15 @@ int	part1(){
 			}
 		}
 		if	(btn & PB1){
+			printf("1");
 			test_pixel();
 		}
 		if	(btn & PB2){
+			printf("2");
 			VGA_clear_charbuff_ASM();
 		}
 		if	(btn & PB3){
+			printf("3");
 			VGA_clear_pixelbuff_ASM();
 		}
 	}
@@ -79,5 +83,5 @@ int	main(){
 	return part1();
 	
 	/* Keyboard */
-	return part2();
+	//return part2();
 }

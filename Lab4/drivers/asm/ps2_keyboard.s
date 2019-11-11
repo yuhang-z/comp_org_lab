@@ -13,7 +13,7 @@ read_PS2_data_ASM:
 		STRB	R1,		[R0]
 
 END:
-		MOV		R0,		R3,
+		MOV		R0,		R3
 		POP		{R1-R3}
 		BX		LR
 		.end

@@ -31,7 +31,7 @@ VGA_write_byte_ASM:
 		BL		CHR_BUFF_SNT_CHK
 		LSL		R1,		#7
 		ORR		R1,		R1,		R0
-		LDR		R3,		=CHE_BUFF
+		LDR		R3,		=CHR_BUFF
 		ORR		R3,		R3,		R1
 		AND		R4,		R2,		#0xF
 		CMP		R4,		#0xF
