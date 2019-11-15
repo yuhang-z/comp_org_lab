@@ -11,144 +11,123 @@ VGA_draw_point_ASM:
 		//R0 for x
 		//R1 for y
 		//R2 for color in short
-		PUSH	{R3-R8, LR}
-		BL		CHR_BUFF_SNT_CHK
-		LSL		R1,		#9
-		ORR		R1,		R1,		R0
-		LSL		R1,		#1
+		PUSH 	{R3-R6}
+		MOVW	R6,		#319
+		CMP		R0,		#0
+		BLT		BYE
+		CMP		R0,		R6
+		BGT		BYE
+		CMP		R1,		#0
+		BLT		BYE
+		CMP		R1,		#239
+		BGT		BYE
 		LDR		R3,		=PIX_BUFF
-		ORR		R3,		R3,		R1
-		STRH	R2,		[R3]
-		POP		{R3-R8,	LR}
-		BX		LR
-		
+		ADD		R4,		R0,		R1,		LSL		#9
+		ADD		R5,		R3,		R4,		LSL		#1
+		STRH 	R2, 	[R5]
+		POP 	{R3-R6}
+		B		BYE
+
+CHR_BUFF_SNT_CHK:
+		BX		LR		
 
 VGA_write_byte_ASM:
 		//R0 for x
 		//R1 for y
 		//R2 for char
-		PUSH	{R3-R8, LR}
-		BL		CHR_BUFF_SNT_CHK
-		LSL		R1,		#7
-		ORR		R1,		R1,		R0
-		LDR		R3,		=CHR_BUFF
-		ORR		R3,		R3,		R1
-		AND		R4,		R2,		#0xF
-		CMP		R4,		#0xF
-		BGT		DUMMY
-		CMP		R4,		#0
-		BLT		DUMMY
-		AND		R5,		R2,		#0xF0
-		LSR		R5,		R5,		#4
-		CMP		R5,		#0xF
-		BGT		DUMMY
-		CMP		R5,		#0
-		BLT		DUMMY
-		LDR		R6,		=DIC
-		LDRB	R7,		[R6,	R4]
-		LDRB	R8,		[R6,	R5]
-		STRB	R8,		[R3]
-		STRB	R7,		[R3,	#1]
-		POP		{R3-R8, LR}
-		BX		LR
-
-CHR_BUFF_SNT_CHK:
+		PUSH	{R3-R7}
 		CMP		R0,		#0
-		BLT		DUMMY
+		BLT		BYE
 		CMP		R0,		#79
-		BGT		DUMMY
+		BGT		BYE
 		CMP		R1,		#0
-		BLT		DUMMY
+		BLT		BYE
 		CMP		R1,		$59
-		BGT		DUMMY
-		BX		LR
+		BGT		BYE
+		ADD 	R3, 	R0, 	R1, 	LSL 	#7
+		LDR		R4,		=CHR_BUFF
+		ADD		R4,		R4,		R3
+		AND		R5,		R2,		#0xF	//Right
+		AND		R6,		R2,		#0xF0	//Left
+		LSR		R6,		#4
+		CMP		R5,		#0xF
+		POPGT	{R3-R7}
+		BGT		BYE
+		CMP		R6,		#0xF
+		POPGT	{R3-R7}
+		BGT		BYE
+		CMP		R5,		#0
+		POPLT	{R3-R7}
+		BLT		BYE
+		CMP		R6,		#0
+		POPLT	{R3-R7}
+		BLT		BYE
+		LDR		R2,		=DIC
+		LDRB	R1,		[R2,	R5]
+		LDRB	R0,		[R2,	R6]
+		STRB	R0,		[R4]
+		STRB	R1,		[R4,	#1]
+		POP		{R3-R7}
+		B		BYE
 
 VGA_write_char_ASM:
-		//R0 for x
-		//R1 for y
-		//R2 for char
-		PUSH	{R3-R8, LR}
-		BL		CHR_BUFF_SNT_CHK
-		LSL		R1,		#7
-		ORR		R1,		R1,		R2
-		LDR		R3,		=CHR_BUFF
-		ORR		R3,		R3,		R1
-		STR		R2,		[R3]
-		POP		{R3-R8, LR}
-		BX		LR
+		PUSH 	{R3-R5}
+		CMP		R0,		#0
+		BLT		BYE
+		CMP		R0,		#79
+		BGT		BYE
+		CMP		R1,		#0
+		BLT		BYE
+		CMP		R1,		#59
+		BGT		BYE
+		LDR 	R5, 	=CHR_BUFF
+		ADD 	R3, 	R0, 	R1, 	LSL 	#7
+		ADD 	R3, 	R3, 	R5
+		STRB 	R2, 	[R3]
+		POP 	{R3-R5}
+BYE: 	BX 		LR
 
 VGA_clear_charbuff_ASM:
-		PUSH	{R0-R3,	LR}
-		MOV		R0,		#59
-		MOV		R1,		#79
-		BL		CB_CL_LP
-		POP		{R0-R3,	LR}
-		BX		LR
-
-CB_CL_LP:
-		PUSH	{LR}
-		B		CB_CL_INNER_LP
-		POP		{LR}
-		SUB		R0,		R0,		#1
-		CMP		R0,		#0
-		BXLT	LR
-		MOV		R1,		#79
-		B		CB_CL_LP
-
-CB_CL_INNER_LP:
-		CMP		R1,		#0
-		BXLT	LR
-		MOV		R2,		R0
-		LSL		R2,		#7
-		ORR		R2,		R2,		R1
+		//R0 for x
+		//R1 for y
+		PUSH	{R0-R5}
+		MOV		R2,		#0
 		LDR		R3,		=CHR_BUFF
-		ORR		R3,		R3,		R2
-		LDR		R2,		[R3]
-		AND		R2,		R2,		#0
-		STR		R2,		[R3]
-		SUB		R1,		R1,		#1
-		B		CB_CL_INNER_LP
+		MOV		R1,		#59
+CBRF:	MOV		R0,		#79
+CAL:	ADD		R4,		R0,		R1,		LSL		#7
+		ADD		R5,		R4,		R3
+		STRB	R2,		[R5]
+		SUBS	R0,		R0,		#1
+		BGE		CAL
+		CMP		R1,		#0
+		POPEQ	{R0-R5}
+		BEQ		BYE
+		SUBS	R1,		R1,		#1
+		B		CBRF
 
 VGA_clear_pixelbuff_ASM:
-		PUSH	{R0-R3,	LR}
-		MOV		R0,		#239
-		MOV		R1,		#1
-		LSL		R1,		#8
-		ORR		R1,		R1,		#63
-		BL		PB_CL_LP
-		POP		{R0-R3,	LR}
-		BX		LR
-
-PB_CL_LP:
-		PUSH	{LR}
-		B		PB_CL_INNER_LP
-		POP		{LR}
-		SUB		R0,		R0,		#1
-		CMP		R0,		#0
-		BXLT	LR
-		MOV		R1,		#1
-		LSL		R1,		#8
-		ORR		R1,		R1,		#63
-		B		PB_CL_LP
-
-PB_CL_INNER_LP:
-		CMP		R1,		#0
-		BXLT	LR
-		MOV		R2,		R0
-		LSL		R2,		#9
-		ORR		R2,		R2,		R1
-		LSL		R2,		#2
+		//R0 for x
+		//R1 for y
+		PUSH	{R0-R5}
+		MOV		R2,		#0
 		LDR		R3,		=PIX_BUFF
-		ORR		R3,		R3,		R2
-		LDR		R2,		[R3]
-		AND		R2,		R2,		#0
-		STR		R2,		[R3]
-		SUB		R1,		R1,		#1
-		B		PB_CL_INNER_LP
+		MOV		R1,		#239
+PIRF:	MOVW	R0,		#319
+CAL2:	ADD		R4,		R0,		R1,		LSL		#9
+		ADD		R5,		R3,		R4,		LSL		#1
+		STRH	R2,		[R5]
+		SUBS	R0,		R0,		#1
+		BGE		CAL2
+		CMP		R1,		#0
+		POPEQ	{R0-R5}
+		BEQ		BYE
+		SUBS	R1,		R1,		#1
+		B		PIRF
 
 DUMMY:
-		POP		{R3-R8, LR}
 		BX		LR
+
 
 DIC:	.byte	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70
 		

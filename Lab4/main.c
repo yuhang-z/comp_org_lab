@@ -42,8 +42,8 @@ void test_byte(){
 void test_pixel(){
 	int x, y;
 	unsigned short colour = 0;
-	for	(y=0; y<=59; y++)
-		for	(x=0; x<=79; x++)
+	for	(y=0; y<=239; y++)
+		for	(x=0; x<=319; x++)
 			VGA_draw_point_ASM(x, y, colour++);
 }
 
@@ -52,7 +52,6 @@ int	part1(){
 	VGA_clear_pixelbuff_ASM();
 	
 	while(1){
-		printf("1");
 		int btn = read_PB_data_ASM();
 		if	(btn & PB0){
 			if (read_slider_switches_ASM() != 0){
@@ -76,9 +75,10 @@ int	part1(){
 }
 
 int	main(){
+
 	/* VGA application */
-	return part1();
+	//return part1();
 	
 	/* Keyboard */
-	//return part2();
+	return part2();
 }
